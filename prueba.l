@@ -70,27 +70,27 @@ xor {
 }
 
 [01]+[\+\-\*\/]+[2-9]+ {
-    printf("Error Léxico: %s\n", yytext);
+    printf("Error Léxico1: %s\n", yytext);
     errorlexico++;
 }
 
 [2-9]+[\+\-\*\/]+[01]+ {
-    printf("Error Léxico: %s\n", yytext);
+    printf("Error Léxico2: %s\n", yytext);
     errorlexico++;
 }
 
 [2-9]+[01]+[2-9]+ {
-    printf("Error Léxico: %s\n", yytext);
+    printf("Error Léxico3: %s\n", yytext);
     errorlexico++;
 }
 
-[2-9]*[\+\-\*\/]+[2-9]* {
-    printf("Error Léxico: %s\n", yytext);
+[2-9]+[\+\-\*\/]+[2-9]+ {
+    printf("Error Léxico4: %s\n", yytext);
     errorlexico++;
 }
 
 [01]*[^(01)+\+\-\*\(\)\/ \n\t]+[01]* {
-    printf("Error Léxico: %s\n", yytext);
+    printf("Error Léxico5: %s\n", yytext);
     errorlexico++;
 }
 
