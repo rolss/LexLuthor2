@@ -6,6 +6,8 @@ extern int yylex();
 extern int yylineno;
 void yyerror(char *s);
 void yyrestart(FILE *);
+int errorcounter=0;
+extern int errorlexico;
 
 %}
 
@@ -19,8 +21,7 @@ void yyrestart(FILE *);
 
 %%
 
-expresion: operando
-         | expresion MAS expresion
+expresion: expresion MAS expresion
          | expresion MENOS expresion
          | expresion POR expresion
          | expresion DIV expresion
@@ -29,7 +30,8 @@ expresion: operando
          | expresion XOR expresion
          | NOT expresion
          | PAR_IZQ expresion PAR_DER
-         |
+         | operando
+         | error
          ;
 
 operando: NUM;
@@ -38,5 +40,39 @@ operando: NUM;
 
 void yyerror(char *s) {
     printf("Error sintáctico en la línea %d: %s\n", yylineno, s);
-    yyrestart(yyin);
+    errorcounter++;
+}
+
+int main(int cont_entradas, char *entradas[]) {
+    freopen("salida.txt", "w", stdout);
+    // Validacion de entradas 
+    if (cont_entradas < 2) {
+        printf("Invalido. Asegurese de proveer un archivo de entrada");
+        return 1;
+    } else if (cont_entradas > 2) {
+        printf("Invalido. Recuerde que solo puede haber un archivo de entrada");
+        return 1;
+    }
+
+    // Abrir el archivo y validarlo
+    printf("Linea 1\n");
+    FILE *f = fopen(entradas[1], "r");
+    if (!f) {
+        printf("El siguiente archivo no se pudo abrir: %s \n", entradas[1]);
+        return 1;
+    }
+
+    // Iniciar analisis con el archivo como entrada
+    yyin = f;
+
+    yylex();
+    if (errorlexico > 0) {
+        printf("Analisis sintactico no se correrá en presencia de errores lexicos");
+    } else {
+        yyparse();
+    }
+
+    // Terminar ejecucion
+    fclose(f);
+    return 0;
 }
