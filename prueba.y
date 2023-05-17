@@ -5,7 +5,7 @@ extern FILE *yyin;
 extern int yylex();
 extern int yylineno;
 void yyerror(char *s);
-void yyrestart(FILE *);
+void yyrestart(FILE* archivo);
 int errorcounter=0;
 extern int errorlexico;
 
@@ -39,7 +39,7 @@ operando: NUM;
 %%
 
 void yyerror(char *s) {
-    printf("Error sintáctico en la línea %d: %s\n", yylineno, s);
+    printf("Error sintáctico!\n");
     errorcounter++;
 }
 
@@ -60,16 +60,18 @@ int main(int cont_entradas, char *entradas[]) {
     if (!f) {
         printf("El siguiente archivo no se pudo abrir: %s \n", entradas[1]);
         return 1;
-    }
+    } 
 
     // Iniciar analisis con el archivo como entrada
     yyin = f;
 
     yylex();
+    printf("Errores: %d\n", errorlexico);
     if (errorlexico > 0) {
         printf("Analisis sintactico no se correrá en presencia de errores lexicos");
     } else {
         yyparse();
+        printf("Errores sintacticos: %d", errorcounter);
     }
 
     // Terminar ejecucion
