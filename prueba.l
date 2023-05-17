@@ -9,6 +9,7 @@ int cont_linea = 2;
 int cont_lex = 0;
 int new_line = 0;
 int errorlexico = 0;
+extern int errorcounter;
 %}
 
 %%
@@ -70,27 +71,27 @@ xor {
 }
 
 [01]+[\+\-\*\/]+[2-9]+ {
-    printf("Error Léxico1: %s\n", yytext);
+    printf("Error Léxico: %s\n", yytext);
     errorlexico++;
 }
 
 [2-9]+[\+\-\*\/]+[01]+ {
-    printf("Error Léxico2: %s\n", yytext);
+    printf("Error Léxico: %s\n", yytext);
     errorlexico++;
 }
 
 [2-9]+[01]+[2-9]+ {
-    printf("Error Léxico3: %s\n", yytext);
+    printf("Error Léxico: %s\n", yytext);
     errorlexico++;
 }
 
 [2-9]+[\+\-\*\/]+[2-9]+ {
-    printf("Error Léxico4: %s\n", yytext);
+    printf("Error Léxico: %s\n", yytext);
     errorlexico++;
 }
 
 [01]*[^(01)+\+\-\*\(\)\/ \n\t]+[01]* {
-    printf("Error Léxico5: %s\n", yytext);
+    printf("Error Léxico: %s\n", yytext);
     errorlexico++;
 }
 
@@ -99,6 +100,8 @@ xor {
 }
 
 [\n] {
+    printf("Errores sintacticos: %d\n", errorcounter);
+    errorcounter=0;
     printf("\n Linea %d\n", cont_linea);
     cont_linea++;
     new_line = 1;
